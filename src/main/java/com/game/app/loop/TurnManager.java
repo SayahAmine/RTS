@@ -3,6 +3,7 @@ package com.game.app.loop;
 import com.game.app.state.GameStat;
 import com.game.core.Combat.CombatResolver;
 import com.game.core.unit.AbstractUnit;
+import com.game.faction.Faction;
 
 import java.util.List;
 
@@ -15,21 +16,36 @@ public class TurnManager {
         this.state = state;
     }
 
-    public void nextTurn(){
+    public void nextTurn() {
         state.nextTurn();
 
 
-        List<AbstractUnit> units = state.getUnits();
-
-        while (units.size() >= 2) {
-            AbstractUnit A = units.get(0);
-            AbstractUnit B = units.get(1);
-            combat.resolve(A, B);
-            if (!B.IsAlive()) {
-                units.remove(B);
-            }
+        List<Faction> factions = state.getFactions();
+        if (factions.size() < 2) {
+            return;
         }
 
+        Faction attacker = factions.get(0);
+        Faction defender = factions.get(1);
 
+        List<AbstractUnit> attackingUnits = attacker.getUnits();
+        List<AbstractUnit> defendingUnits = defender.getUnits();
+
+        if (attackingUnits.isEmpty() || defendingUnits.isEmpty()) {
+            return;
+        }
+
+        AbstractUnit A = attackingUnits.get(0);
+        AbstractUnit B = defendingUnits.get(0);
+
+        combat.resolve(A, B);
+
+        if (!B.IsAlive()) {
+            defendingUnits.remove(B);
+        }
     }
+
+
+
+
 }

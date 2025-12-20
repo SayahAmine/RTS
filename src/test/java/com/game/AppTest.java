@@ -1,4 +1,4 @@
-package com.laibary;
+package com.game;
 
 import static org.junit.Assert.assertTrue;
 

@@ -5,32 +5,39 @@ import com.game.app.state.GameStat;
 import com.game.core.building.CommandCenter;
 import com.game.core.building.Mine;
 import com.game.core.unit.Soldier;
+import com.game.faction.Faction;
 
-/**
- * Hello world!
- *
- */
 public class App {
     public static void main(String[] args) {
+
         GameStat gs = new GameStat();
+
+        Faction red = new Faction("Red");
+        Faction blue = new Faction("Blue");
 
 
         // Add units
-        gs.getUnits().add(new Soldier());
-        gs.getUnits().add(new Soldier());
+        red.getUnits().add(new Soldier());
+        blue.getUnits().add(new Soldier());
 
         // Add buildings
-        gs.getBuildings().add(new CommandCenter());
-        gs.getBuildings().add(new Mine());
+        red.getBuildings().add(new CommandCenter());
+        red.getBuildings().add(new Mine());
+
+        gs.getFactions().add(red);
+        gs.getFactions().add(blue);
 
         TurnManager tm = new TurnManager(gs);
 
         for (int i = 0; i < 5; i++) {
             tm.nextTurn();
-            System.out.println("Turn " + gs.getTurnCounter() + " resources: " + gs.getResource().snapshot());
+            System.out.println("Turn " + gs.getTurnCounter());
+            System.out.println(red.getName() + " resources: " + red.getResources().snapshot());
+            System.out.println(blue.getName() + " resources: " + blue.getResources().snapshot());
         }
 
-        System.out.println("Units alive: " + gs.getUnits().size());
-    }
+        System.out.println("Red units alive: " + red.getUnits().size());
+        System.out.println("Blue units alive: " + blue.getUnits().size());
 
+    }
 }

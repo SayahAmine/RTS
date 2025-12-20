@@ -5,6 +5,7 @@ import com.game.core.building.Building;
 import com.game.core.resource.Resource;
 import com.game.core.unit.AbstractUnit;
 import com.game.core.unit.AbstractUnit;
+import com.game.faction.Faction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,21 +13,11 @@ import java.util.List;
 public class GameStat {
 
 
-    private final List<AbstractUnit> units = new ArrayList<>();
-    private final List<AbstractBuilding> buildings = new ArrayList<>();
-    private final Resource resource = new Resource();
+    private final List<Faction> factions = new ArrayList<>();
     private int turnCounter = 0;
 
-    public List<AbstractUnit> getUnits() {
-        return units;
-    }
-
-    public List<AbstractBuilding> getBuildings() {
-        return buildings;
-    }
-
-    public Resource getResource() {
-        return resource;
+    public List<Faction> getFactions() {
+        return factions;
     }
 
     public int getTurnCounter() {
@@ -35,8 +26,8 @@ public class GameStat {
 
     public void nextTurn() {
         turnCounter++;
-        for (Building b :buildings){
-            b.applyEffect(resource);
+        for (Faction f : factions) {
+            f.nextTurn();
         }
     }
 }
