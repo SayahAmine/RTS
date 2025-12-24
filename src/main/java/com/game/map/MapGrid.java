@@ -6,40 +6,37 @@ import java.util.Random;
 public class MapGrid {
 
     private Tile[][] grid;
-    private  int width;
-    private  int height;
+    private int width;
+    private int height;
 
-    public MapGrid(int width, int height){
+    public MapGrid(int width, int height) {
         this.width = width;
         this.height = height;
-        this.grid = new Tile[width][height];
-        generateRandomMap();
+        grid = new Tile[width][height];
+        generateRandomMap(); // 🔥 IMPORTANT
     }
-    private void generateRandomMap(){
 
+    private void generateRandomMap() {
+        Random random = new Random();
+        TerrainType[] terrains = TerrainType.values();
 
-        Random rand = new Random();
-
-        for(int x = 0; x < width; x++){
-            for(int y = 0; y < height; y++){
-
-                TerrainType terrain = TerrainType.values()[rand.nextInt(TerrainType.values().length)];
-                grid[x][y] = new Tile(terrain);
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                TerrainType terrain = terrains[random.nextInt(terrains.length)];
+                grid[x][y] = new Tile(terrain); // ✅ NO NULLS
             }
         }
-
-
     }
 
-
-     public Tile getTile(int x, int y){
-
+    public Tile getTile(int x, int y) {
         return grid[x][y];
+    }
 
-     }
+    public int getWidth() {
+        return width;
+    }
 
-
-
+    public int getHeight() {
+        return height;
+    }
 }
-
-

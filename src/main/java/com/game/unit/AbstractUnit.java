@@ -25,4 +25,7 @@ public abstract class AbstractUnit {
     public int getDefense() { return defense; }
     public int getRange() { return range; }
     public int getMovementPoints() { return movementPoints; }
+
+    public void moveTo(int targetX, int targetY) {
+    }
 }
