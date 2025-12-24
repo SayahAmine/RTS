@@ -1,51 +1,30 @@
 package com.game.ai;
 
-
-
-import com.game.building.Building;
-import com.game.building.Farm;
-import com.game.building.Mine;
-import com.game.building.Sawmill;
+import com.game.building.*;
 import com.game.game.Player;
-import com.game.map.MapGrid;
-import com.game.resource.ResourcePool;
 import com.game.resource.ResourceType;
-import com.game.unit.AbstractUnit;
-import com.game.unit.Archer;
-import com.game.unit.Cavalier;
-import com.game.unit.Soldier;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
+import com.game.unit.*;
+import com.game.ui.EventLog;
 
 import java.util.Random;
 
-
-
-/**
- * Enemy AI controller
- * Uses simple rule-based strategies to act each turn
- */
 public class EnemyAI {
 
-    private Player enemy;
+    private final Player enemy;
+    private final EventLog log;
     private AIStrategyType strategy;
-    private Random random;
+    private final Random random = new Random();
 
-    public EnemyAI(Player enemy) {
+    public EnemyAI(Player enemy, EventLog log) {
         this.enemy = enemy;
-        this.random = new Random();
+        this.log = log;
         this.strategy = pickRandomStrategy();
     }
 
+    /* ===================== TURN ===================== */
 
-    /**
-     * Called once per turn
-     */
     public void playTurn() {
-        System.out.println("AI Strategy: " + strategy);
+        log.log("Enemy strategy: " + strategy);
 
         switch (strategy) {
             case ECONOMIC -> economyTurn();
@@ -53,73 +32,81 @@ public class EnemyAI {
             case BALANCED -> balancedTurn();
         }
 
-        // Occasionally change strategy (keeps AI fresh)
+        produceResources();
+
         if (random.nextInt(5) == 0) {
             strategy = pickRandomStrategy();
-            System.out.println("AI changes strategy to: " + strategy);
+            log.log("Enemy changed strategy");
         }
+
+        log.log("Enemy turn ended");
     }
 
     /* ===================== STRATEGIES ===================== */
 
-    // Focus on buildings & resources
     private void economyTurn() {
-        if (tryBuild(new Farm(enemy.getResources()))) return;
-        if (tryBuild(new Sawmill(enemy.getResources()))) return;
-        if (tryBuild(new Mine(enemy.getResources()))) return;
-
+        if (tryBuild(new Farm(enemy.getResources()), "Farm")) return;
+        if (tryBuild(new Sawmill(enemy.getResources()), "Sawmill")) return;
+        if (tryBuild(new Mine(enemy.getResources()), "Mine")) return;
         trainRandomUnit();
     }
 
-    // Focus on army size
     private void aggressiveTurn() {
         if (enemy.getUnits().size() < 5) {
             trainRandomUnit();
         } else {
-            System.out.println("AI prepares an attack!");
-            // later: movement + combat
+            log.log("Enemy is preparing an attack");
         }
     }
 
-    // Mix of economy + army
     private void balancedTurn() {
         if (enemy.getUnits().size() < 3) {
             trainRandomUnit();
         } else if (random.nextBoolean()) {
             trainRandomUnit();
         } else {
-            tryBuild(new Mine(enemy.getResources()));
+            tryBuild(new Mine(enemy.getResources()), "Mine");
         }
     }
 
     /* ===================== ACTIONS ===================== */
 
-    private boolean tryBuild(Building building) {
+    private boolean tryBuild(Building building, String name) {
         if (enemy.getResources().spendCost(building.getCost())) {
             enemy.getBuildings().add(building);
-            System.out.println("AI builds: " + building.getName());
+            log.log("Enemy built a " + name);
             return true;
         }
         return false;
     }
 
     private void trainRandomUnit() {
-        AbstractUnit unit;
-
-        int choice = random.nextInt(3);
-        switch (choice) {
-            case 0 -> unit = new Soldier();
-            case 1 -> unit = new Archer();
-            default -> unit = new Cavalier();
-        }
-
+        AbstractUnit unit = switch (random.nextInt(3)) {
+            case 0 -> new Soldier();
+            case 1 -> new Archer();
+            default -> new Cavalier();
+        };
         enemy.getUnits().add(unit);
-        System.out.println("AI trains: " + unit.getType());
+        log.log("Enemy trained " + unit.getType());
     }
 
-    /* ===================== HELPERS ===================== */
+    /* ===================== ECONOMY ===================== */
+
+    private void produceResources() {
+        for (Building b : enemy.getBuildings()) {
+            if (b instanceof Farm)
+                enemy.getResources().add(ResourceType.FOOD, 20);
+            if (b instanceof Mine)
+                enemy.getResources().add(ResourceType.STONE, 15);
+            if (b instanceof Sawmill)
+                enemy.getResources().add(ResourceType.WOOD, 15);
+        }
+    }
+
+    /* ===================== UTILS ===================== */
 
     private AIStrategyType pickRandomStrategy() {
-        return AIStrategyType.values()[random.nextInt(AIStrategyType.values().length)];
+        return AIStrategyType.values()
+                [random.nextInt(AIStrategyType.values().length)];
     }
 }

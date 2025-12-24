@@ -13,6 +13,9 @@ public abstract class AbstractBuilding implements Building {
     }
 
     protected void addResource(ResourceType type, int amount) {
+
         resourcePool.add(type, amount);
     }
+
+    public abstract String getName();
 }

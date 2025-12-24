@@ -1,42 +1,38 @@
 package com.game.map;
 
-
+import java.io.Serializable;
 import java.util.Random;
 
-public class MapGrid {
+public class MapGrid implements Serializable {
 
-    private Tile[][] grid;
-    private int width;
-    private int height;
+    private final int width;
+    private final int height;
+    private final Tile[][] tiles;
 
     public MapGrid(int width, int height) {
         this.width = width;
         this.height = height;
-        grid = new Tile[width][height];
-        generateRandomMap(); // 🔥 IMPORTANT
+        this.tiles = new Tile[width][height];
+        generate();
     }
 
-    private void generateRandomMap() {
-        Random random = new Random();
+    private void generate() {
+        Random r = new Random();
         TerrainType[] terrains = TerrainType.values();
 
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                TerrainType terrain = terrains[random.nextInt(terrains.length)];
-                grid[x][y] = new Tile(terrain); // ✅ NO NULLS
+                tiles[x][y] = new Tile(
+                        terrains[r.nextInt(terrains.length)]
+                );
             }
         }
     }
 
     public Tile getTile(int x, int y) {
-        return grid[x][y];
+        return tiles[x][y];
     }
 
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
+    public int getWidth() { return width; }
+    public int getHeight() { return height; }
 }

@@ -11,7 +11,7 @@ public class EventLog extends TextArea {
         setText("Game started...\n");
     }
 
-    public void log(String message) {
-        appendText("• " + message + "\n");
+    public void log(String msg) {
+        appendText("• " + msg + "\n");
     }
 }

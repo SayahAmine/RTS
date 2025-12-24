@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="GameApp" type="Application" factoryName="Application" nameIsGenerated="true">
+    <option name="ALTERNATIVE_JRE_PATH" value="openjdk-24" />
+    <option name="MAIN_CLASS_NAME" value="com.game.ui.GameApp" />
+    <module name="RTSG" />
+    <option name="VM_PARAMETERS" value="--module-path &quot;C:\Users\itsou\.m2\repository\org\openjfx\javafx-base\21.0.1;C:\Users\itsou\.m2\repository\org\openjfx\javafx-controls\21.0.1;C:\Users\itsou\.m2\repository\org\openjfx\javafx-graphics\21.0.1;C:\Users\itsou\.m2\repository\org\openjfx\javafx-fxml\21.0.1&quot; --add-modules javafx.controls,javafx.fxml " />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

@@ -1,54 +1,44 @@
 package com.game.map;
 
-
 import com.game.unit.AbstractUnit;
+import com.game.building.Building;
 
-public class Tile {
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-   private TerrainType terrain;
-   private String controllingFaction;
+public class Tile implements Serializable {
+
+    private TerrainType terrain;
+    private Building building;
+    private List<AbstractUnit> units = new ArrayList<>();
 
     public Tile(TerrainType terrain) {
         this.terrain = terrain;
-        this.controllingFaction = null;
     }
 
     public TerrainType getTerrain() {
         return terrain;
     }
 
-    public String getControllingFaction() {
-        return controllingFaction;
+    public Building getBuilding() {
+        return building;
     }
 
-    public void setControllingFaction(String controllingFaction) {
-        this.controllingFaction = controllingFaction;
+    public void setBuilding(Building building) {
+        this.building = building;
     }
 
-    public boolean canEnter(AbstractUnit unit){
-        switch (terrain){
-            case MOUNTAIN ->
-            {
-                return !unit.getType().equals("CAVALRY");
-            }
-            case WATER ->
-                {
-                return !unit.getType().equals("INFANTRY");
-            }
-            default ->
-                {
-                return true;
-                }
-        }
+    public List<AbstractUnit> getUnits() {
+        return units;
     }
 
-    public int getDefenseBonus() {
-        if (terrain == TerrainType.FOREST) return 2;
-        return 0;
+    public void addUnit(AbstractUnit unit) {
+        units.add(unit);
+        unit.moveTo(0, 0); // optional init
     }
 
-    public int getSpeedModifier() {
-        if (terrain == TerrainType.PLAIN) return 1;
-        return 0;
+    public void removeUnit(AbstractUnit unit) {
+        units.remove(unit);
     }
 }

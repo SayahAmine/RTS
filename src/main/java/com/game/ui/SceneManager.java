@@ -1,5 +1,6 @@
 package com.game.ui;
 
+import com.game.game.Game;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -13,13 +14,12 @@ public class SceneManager {
     }
 
     public static void showMainMenu() {
-        Scene scene = new Scene(new MainMenuView(), 800, 600);
-        primaryStage.setScene(scene);
+        primaryStage.setScene(new Scene(new MainMenuView(), 800, 600));
         primaryStage.show();
     }
 
-    public static void showGame() {
-        Scene scene = new Scene(new GameView(), 1000, 700);
-        primaryStage.setScene(scene);
+    // ✅ ADD THIS METHOD
+    public static void showLoadedGame(Game game) {
+        primaryStage.setScene(new Scene(new GameView(game), 1000, 700));
     }
 }

@@ -14,12 +14,8 @@ public class PlayerStatusPanel extends VBox {
         this.player = player;
 
         setSpacing(10);
-        setStyle("-fx-padding: 10; -fx-border-color: black;");
-
-        getChildren().addAll(
-                new Label("PLAYER STATUS"),
-                info
-        );
+        setStyle("-fx-padding:10; -fx-border-color:black;");
+        getChildren().addAll(new Label("Player Status"), info);
 
         refresh();
     }

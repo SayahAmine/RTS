@@ -1,53 +1,40 @@
 package com.game.resource;
 
+import java.io.Serializable;
 import java.util.EnumMap;
 import java.util.Map;
 
-public class ResourcePool {
+public class ResourcePool implements Serializable {
 
-    private Map<ResourceType, Integer> resources;
+    private final Map<ResourceType, Integer> resources =
+            new EnumMap<>(ResourceType.class);
 
     public ResourcePool() {
-        resources = new EnumMap<>(ResourceType.class);
-        for (ResourceType type : ResourceType.values()) {
-            resources.put(type, 0);
-        }
+        // ✅ STARTING RESOURCES
+        resources.put(ResourceType.GOLD, 200);
+        resources.put(ResourceType.WOOD, 150);
+        resources.put(ResourceType.STONE, 100);
+        resources.put(ResourceType.FOOD, 100);
     }
 
-    // Add resources
-    public void add(ResourceType type, int amount) {
-        resources.put(type, resources.get(type) + amount);
-    }
-
-    // Spend resources
-    public boolean spend(ResourceType type, int amount) {
-        if (resources.get(type) < amount) {
-            return false;
-        }
-        resources.put(type, resources.get(type) - amount);
-        return true;
-    }
-
-    // Check availability
-    public boolean has(ResourceType type, int amount) {
-        return resources.get(type) >= amount;
-    }
-
-    // Get current amount
     public int get(ResourceType type) {
-        return resources.get(type);
+        return resources.getOrDefault(type, 0);
     }
 
-    // Spend multiple resources at once
     public boolean spendCost(Map<ResourceType, Integer> cost) {
         for (var entry : cost.entrySet()) {
-            if (!has(entry.getKey(), entry.getValue())) {
+            if (get(entry.getKey()) < entry.getValue()) {
                 return false;
             }
         }
         for (var entry : cost.entrySet()) {
-            spend(entry.getKey(), entry.getValue());
+            resources.put(entry.getKey(),
+                    get(entry.getKey()) - entry.getValue());
         }
         return true;
+    }
+
+    public void add(ResourceType type, int amount) {
+        resources.put(type, get(type) + amount);
     }
 }

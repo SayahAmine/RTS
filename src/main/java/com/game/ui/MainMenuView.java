@@ -1,5 +1,7 @@
 package com.game.ui;
 
+import com.game.game.Game;
+import com.game.save.SaveManager;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -20,7 +22,10 @@ public class MainMenuView extends VBox {
         loadGame.setPrefWidth(200);
         quit.setPrefWidth(200);
 
-        newGame.setOnAction(e -> SceneManager.showGame());
+        newGame.setOnAction(e ->
+                SceneManager.showLoadedGame(new Game())
+        );
+
 
         loadGame.setOnAction(e -> {
             System.out.println("Load Game clicked (not implemented yet)");
@@ -32,5 +37,13 @@ public class MainMenuView extends VBox {
         setSpacing(20);
 
         getChildren().addAll(title, newGame, loadGame, quit);
+
+        loadGame.setOnAction(e -> {
+            Game loaded = SaveManager.load();
+            if (loaded != null) {
+                SceneManager.showLoadedGame(loaded);
+            }
+        });
+
     }
 }
